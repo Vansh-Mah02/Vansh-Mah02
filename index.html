@@ -7,61 +7,192 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
+
+:root{
+    --bg:#0d1117;
+    --surface:#161b22;
+    --border:#30363d;
+    --text:#e6edf3;
+    --muted:#8b949e;
+    --blue:#58a6ff;
+    --green:#7ee787;
+}
 
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
 }
 
 body{
-    background:#0d1117;
-    color:white;
+    background:var(--bg);
+    color:var(--text);
     line-height:1.6;
+    font-family:'Inter', Arial, Helvetica, sans-serif;
+    overflow-x:hidden;
+    position:relative;
 }
 
+#bg-canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:-1;
+    display:block;
+}
+
+h1, h2, .mono{
+    font-family:'JetBrains Mono', monospace;
+}
+
+/* ---------- header / terminal window ---------- */
+
 header{
-    text-align:center;
-    padding:70px 20px;
+    padding:60px 20px 70px;
     background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    background-size:200% 200%;
+    animation:gradientShift 12s ease infinite;
+    display:flex;
+    justify-content:center;
+}
+
+@keyframes gradientShift{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+.terminal{
+    width:100%;
+    max-width:640px;
+    background:rgba(22,27,34,.85);
+    border:1px solid var(--border);
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 20px 50px rgba(0,0,0,.45);
+    backdrop-filter:blur(6px);
+}
+
+.terminal-bar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 14px;
+    background:#0d1117;
+    border-bottom:1px solid var(--border);
+}
+
+.dot{
+    width:11px;
+    height:11px;
+    border-radius:50%;
+}
+.dot.red{background:#ff5f56;}
+.dot.yellow{background:#ffbd2e;}
+.dot.green{background:#27c93f;}
+
+.terminal-title{
+    margin-left:auto;
+    margin-right:auto;
+    font-size:.75rem;
+    color:var(--muted);
+    font-family:'JetBrains Mono', monospace;
+}
+
+.terminal-body{
+    padding:28px 26px 32px;
+    text-align:left;
 }
 
 header h1{
-    font-size:3rem;
+    font-size:2.1rem;
+    font-weight:700;
+    line-height:1.3;
 }
 
-header p{
-    margin-top:15px;
-    font-size:1.2rem;
+.typewrap{
+    margin-top:12px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:1rem;
     color:#ccc;
+    min-height:1.4em;
 }
+
+.typewrap .cursor{
+    display:inline-block;
+    width:8px;
+    background:var(--green);
+    margin-left:2px;
+    animation:blink 1s step-end infinite;
+}
+
+@keyframes blink{
+    0%,100%{opacity:1;}
+    50%{opacity:0;}
+}
+
+/* ---------- sections ---------- */
 
 section{
     width:90%;
     max-width:1000px;
-    margin:50px auto;
+    margin:60px auto;
+    opacity:0;
+    transform:translateY(24px);
+    transition:opacity .6s ease, transform .6s ease;
+}
+
+section.visible{
+    opacity:1;
+    transform:translateY(0);
 }
 
 h2{
-    color:#58a6ff;
+    color:var(--blue);
     margin-bottom:20px;
-    border-bottom:2px solid #30363d;
     padding-bottom:10px;
+    border-bottom:2px solid var(--border);
+    font-size:1.3rem;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+h2::before{
+    content:"//";
+    color:var(--muted);
+    font-weight:400;
 }
 
 .card{
-    background:#161b22;
+    background:var(--surface);
     padding:25px;
     border-radius:12px;
+    border:1px solid var(--border);
+    border-left:3px solid var(--blue);
     box-shadow:0 0 15px rgba(0,0,0,.4);
+    transition:border-color .3s ease, transform .3s ease;
+}
+
+.card:hover{
+    border-left-color:var(--green);
+    transform:translateY(-2px);
 }
 
 ul{
-    padding-left:20px;
+    list-style:none;
 }
+
+ul li{
+    padding:6px 0;
+}
+
+/* ---------- skills ---------- */
 
 .skills{
     display:flex;
@@ -71,15 +202,22 @@ ul{
 
 .skill{
     background:#21262d;
+    border:1px solid var(--border);
     padding:12px 20px;
     border-radius:8px;
-    transition:.3s;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.9rem;
+    transition:background .25s ease, color .25s ease, transform .25s ease;
+    cursor:default;
 }
 
 .skill:hover{
-    background:#58a6ff;
-    color:black;
+    background:var(--blue);
+    color:#0d1117;
+    transform:translateY(-3px);
 }
+
+/* ---------- links ---------- */
 
 .links{
     display:flex;
@@ -94,13 +232,16 @@ ul{
     background:#238636;
     padding:12px 25px;
     border-radius:8px;
-    transition:.3s;
+    transition:background .3s ease, transform .3s ease;
+    font-weight:500;
 }
 
 .links a:hover{
     background:#2ea043;
     transform:translateY(-3px);
 }
+
+/* ---------- stats ---------- */
 
 .stats{
     display:grid;
@@ -111,27 +252,67 @@ ul{
 .stats img{
     width:100%;
     border-radius:10px;
+    border:1px solid var(--border);
+    background:var(--surface);
+    min-height:120px;
 }
+
+.stats .stat-error{
+    width:100%;
+    min-height:120px;
+    border-radius:10px;
+    border:1px dashed var(--border);
+    background:var(--surface);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:20px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.8rem;
+    color:var(--muted);
+}
+
+/* ---------- quote ---------- */
+
+.quote{
+    text-align:center;
+    font-size:1.3rem;
+    font-style:italic;
+    color:var(--blue);
+    position:relative;
+    padding:0 30px;
+}
+
+.quote::before,
+.quote::after{
+    font-family:'JetBrains Mono', monospace;
+    color:var(--muted);
+    font-style:normal;
+    font-size:1.6rem;
+}
+.quote::before{content:"“";}
+.quote::after{content:"”";}
+
+/* ---------- footer ---------- */
 
 footer{
     text-align:center;
     padding:40px;
-    color:#aaa;
-}
-
-.quote{
-    text-align:center;
-    font-size:22px;
-    font-style:italic;
-    color:#58a6ff;
+    color:var(--muted);
+    font-family:'JetBrains Mono', monospace;
+    font-size:.85rem;
 }
 
 @media(max-width:700px){
-
-header h1{
-    font-size:2rem;
+    header h1{font-size:1.5rem;}
+    .terminal-body{padding:22px 18px 26px;}
 }
 
+@media (prefers-reduced-motion: reduce){
+    header{animation:none;}
+    section{transition:none; opacity:1; transform:none;}
+    .typewrap .cursor{animation:none;}
 }
 
 </style>
@@ -140,19 +321,28 @@ header h1{
 
 <body>
 
+<canvas id="bg-canvas"></canvas>
+
 <header>
 
-<h1>Hi 👋, I'm Vansh Maheshwari</h1>
-
-<p>
-B.Tech CSE Student • Aspiring Software Development Engineer • Problem Solver
-</p>
+<div class="terminal">
+    <div class="terminal-bar">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+        <span class="terminal-title">vansh@portfolio: ~</span>
+    </div>
+    <div class="terminal-body">
+        <h1>Hi 👋, I'm Vansh Maheshwari</h1>
+        <div class="typewrap"><span id="typed"></span><span class="cursor">&nbsp;</span></div>
+    </div>
+</div>
 
 </header>
 
 <section>
 
-<h2>👨‍💻 About Me</h2>
+<h2>About Me</h2>
 
 <div class="card">
 
@@ -176,7 +366,7 @@ B.Tech CSE Student • Aspiring Software Development Engineer • Problem Solver
 
 <section>
 
-<h2>🚀 Tech Stack</h2>
+<h2>Tech Stack</h2>
 
 <div class="skills">
 
@@ -202,7 +392,7 @@ B.Tech CSE Student • Aspiring Software Development Engineer • Problem Solver
 
 <section>
 
-<h2>📈 Currently Working On</h2>
+<h2>Currently Working On</h2>
 
 <div class="card">
 
@@ -224,15 +414,15 @@ B.Tech CSE Student • Aspiring Software Development Engineer • Problem Solver
 
 <section>
 
-<h2>📊 GitHub Stats</h2>
+<h2>GitHub Stats</h2>
 
 <div class="stats">
 
-<img src="https://github-readme-stats.vercel.app/api?username=Vansh-Mah02&show_icons=true&theme=tokyonight">
+<img class="stat-img" alt="GitHub stats for Vansh-Mah02" loading="lazy" src="https://github-readme-stats.vercel.app/api?username=Vansh-Mah02&show_icons=true&theme=tokyonight&hide_border=true">
 
-<img src="https://github-readme-streak-stats.herokuapp.com/?user=Vansh-Mah02&theme=tokyonight">
+<img class="stat-img" alt="GitHub streak stats for Vansh-Mah02" loading="lazy" src="https://streak-stats.demolab.com/?user=Vansh-Mah02&theme=tokyonight&hide_border=true">
 
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Vansh-Mah02&layout=compact&theme=tokyonight">
+<img class="stat-img" alt="Top languages for Vansh-Mah02" loading="lazy" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Vansh-Mah02&layout=compact&theme=tokyonight&hide_border=true">
 
 </div>
 
@@ -240,7 +430,7 @@ B.Tech CSE Student • Aspiring Software Development Engineer • Problem Solver
 
 <section>
 
-<h2>🏆 Coding Profiles</h2>
+<h2>Coding Profiles</h2>
 
 <div class="links">
 
@@ -256,11 +446,11 @@ B.Tech CSE Student • Aspiring Software Development Engineer • Problem Solver
 
 <section>
 
-<h2>💡 Quote</h2>
+<h2>Quote</h2>
 
 <div class="quote">
 
-"Success doesn't come from what you do occasionally. It comes from what you do consistently."
+Success doesn't come from what you do occasionally. It comes from what you do consistently.
 
 </div>
 
@@ -273,6 +463,166 @@ B.Tech CSE Student • Aspiring Software Development Engineer • Problem Solver
 <p>Made with ❤️ by Vansh Maheshwari</p>
 
 </footer>
+
+<script>
+// Typewriter effect cycling through roles
+(function(){
+    var roles = [
+        "B.Tech CSE Student",
+        "Aspiring Software Development Engineer",
+        "Problem Solver"
+    ];
+    var el = document.getElementById('typed');
+    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if(prefersReduced){
+        el.textContent = roles.join(" • ");
+        return;
+    }
+
+    var roleIndex = 0, charIndex = 0, deleting = false;
+
+    function tick(){
+        var current = roles[roleIndex];
+
+        if(!deleting){
+            charIndex++;
+            el.textContent = current.slice(0, charIndex);
+            if(charIndex === current.length){
+                deleting = true;
+                setTimeout(tick, 1400);
+                return;
+            }
+        } else {
+            charIndex--;
+            el.textContent = current.slice(0, charIndex);
+            if(charIndex === 0){
+                deleting = false;
+                roleIndex = (roleIndex + 1) % roles.length;
+            }
+        }
+        setTimeout(tick, deleting ? 35 : 55);
+    }
+    tick();
+})();
+
+// Dynamic moving tech background — drifting node network on canvas
+(function(){
+    var canvas = document.getElementById('bg-canvas');
+    var ctx = canvas.getContext('2d');
+    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var particles = [];
+    var w, h;
+    var linkColor = '88,166,255';
+    var nodeColor = '126,231,135';
+
+    function resize(){
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+
+    function initParticles(){
+        var count = Math.min(90, Math.round((w * h) / 16000));
+        particles = [];
+        for(var i = 0; i < count; i++){
+            particles.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                vx: (Math.random() - 0.5) * 0.35,
+                vy: (Math.random() - 0.5) * 0.35,
+                r: Math.random() * 1.6 + 0.6
+            });
+        }
+    }
+
+    function step(){
+        ctx.clearRect(0, 0, w, h);
+
+        for(var i = 0; i < particles.length; i++){
+            var p = particles[i];
+            if(!prefersReduced){
+                p.x += p.vx;
+                p.y += p.vy;
+                if(p.x < 0 || p.x > w) p.vx *= -1;
+                if(p.y < 0 || p.y > h) p.vy *= -1;
+            }
+        }
+
+        for(var i = 0; i < particles.length; i++){
+            for(var j = i + 1; j < particles.length; j++){
+                var a = particles[i], b = particles[j];
+                var dx = a.x - b.x, dy = a.y - b.y;
+                var dist = Math.sqrt(dx * dx + dy * dy);
+                if(dist < 140){
+                    ctx.strokeStyle = 'rgba(' + linkColor + ',' + (0.16 * (1 - dist / 140)) + ')';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(a.x, a.y);
+                    ctx.lineTo(b.x, b.y);
+                    ctx.stroke();
+                }
+            }
+        }
+
+        for(var i = 0; i < particles.length; i++){
+            var p = particles[i];
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(' + nodeColor + ',0.55)';
+            ctx.fill();
+        }
+
+        if(!prefersReduced){
+            requestAnimationFrame(step);
+        }
+    }
+
+    var resizeTimer;
+    window.addEventListener('resize', function(){
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function(){
+            resize();
+            initParticles();
+            if(prefersReduced) step();
+        }, 200);
+    });
+
+    resize();
+    initParticles();
+    step();
+})();
+
+// Graceful fallback for GitHub stat images (rate limits / slow responses)
+(function(){
+    var imgs = document.querySelectorAll('.stat-img');
+    imgs.forEach(function(img){
+        img.addEventListener('error', function(){
+            var fallback = document.createElement('div');
+            fallback.className = 'stat-error';
+            fallback.textContent = '// ' + (img.alt || 'stat card') + ' unavailable right now — refresh to retry';
+            img.replaceWith(fallback);
+        }, { once: true });
+    });
+})();
+
+// Scroll reveal for sections
+(function(){
+    var sections = document.querySelectorAll('section');
+    if(!('IntersectionObserver' in window)){
+        sections.forEach(function(s){ s.classList.add('visible'); });
+        return;
+    }
+    var observer = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+            if(entry.isIntersecting){
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+    sections.forEach(function(s){ observer.observe(s); });
+})();
+</script>
 
 </body>
 </html>
